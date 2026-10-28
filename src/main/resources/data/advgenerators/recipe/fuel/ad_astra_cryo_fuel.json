@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ad_astra"
+    }
+  ],
+  "fuel": [
+    { "fluid": "ad_astra:cryo_fuel" },
+    { "fluid": "ad_astra:flowing_cryo_fuel" }
+  ],
+  "fePerMb": 5000
+}

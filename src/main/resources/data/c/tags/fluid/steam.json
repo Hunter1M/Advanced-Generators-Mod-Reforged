@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "advgenerators:steam",
+    {
+      "id": "ic2:steam",
+      "required": false
+    },
+    {
+      "id": "ic2:superheated_steam",
+      "required": false
+    }
+  ]
+}

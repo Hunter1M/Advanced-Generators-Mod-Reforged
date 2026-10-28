@@ -6,7 +6,7 @@ import net.bdew.lib.container.NoInvContainer
 import net.bdew.lib.data.base.{ContainerDataSlots, TileDataSlots}
 import net.bdew.lib.multiblock.interact.ContainerOutputFaces
 import net.minecraft.world.entity.player.Inventory
-import net.minecraftforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.FluidStack
 
 class ContainerFuelTurbine(val te: TileFuelTurbineController, playerInventory: Inventory, id: Int)
   extends NoInvContainer(Containers.fuelTurbine.get(), id) with ContainerDataSlots with ContainerOutputFaces with ContainerCanDumpBuffers {

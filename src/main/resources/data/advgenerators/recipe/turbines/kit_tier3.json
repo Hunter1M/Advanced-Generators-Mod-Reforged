@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XRX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "c:ingots/bronze"
+    },
+    "R": {
+      "item": "advgenerators:upgrade_kit"
+    }
+  },
+  "result": {
+    "id": "advgenerators:turbine_kit_tier3",
+    "count": 1
+  }
+}

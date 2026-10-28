@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tfmg"
+    }
+  ],
+  "fuel": [
+    { "fluid": "tfmg:ethylene" },
+    { "fluid": "tfmg:flowing_ethylene" }
+  ],
+  "fePerMb": 11260
+}

@@ -1,0 +1,18 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buildcraftenergy"
+    }
+  ],
+  "fuel": [
+    { "fluid": "buildcraftenergy:oil_residue" },
+    { "fluid": "buildcraftenergy:oil_residue_flowing" },
+    { "fluid": "buildcraftenergy:oil_residue_heat_1" },
+    { "fluid": "buildcraftenergy:oil_residue_heat_1_flowing" },
+    { "fluid": "buildcraftenergy:oil_residue_heat_2" },
+    { "fluid": "buildcraftenergy:oil_residue_heat_2_flowing" }
+  ],
+  "fePerMb": 300
+}

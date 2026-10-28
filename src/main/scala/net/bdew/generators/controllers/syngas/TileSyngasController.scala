@@ -26,10 +26,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.entity.{BlockEntity, BlockEntityType}
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.{Fluids => VanillaFluids}
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.capability.IFluidHandler
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction
-import net.minecraftforge.items.IItemHandler
+import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
+import net.neoforged.neoforge.items.IItemHandler
 
 class TileSyngasController(teType: BlockEntityType[_], pos: BlockPos, state: BlockState) extends TileExtended(teType, pos, state)
   with TileControllerGui with CIFluidInput with CIItemInput with CIOutputFaces with CIFluidOutputSelect with CIRedstoneSensors with CIControl {

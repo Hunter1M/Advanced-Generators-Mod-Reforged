@@ -1,0 +1,27 @@
+package net.bdew.lib.sensors
+
+import net.bdew.lib.Text
+import net.bdew.lib.gui.{DrawTarget, Rect, Texture}
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.network.chat.Component
+import net.neoforged.api.distmarker.{Dist, OnlyIn}
+
+abstract class RedstoneSensors[T] extends SensorSystem[T, Boolean](false) {
+  private lazy val rsOn = Texture.block("minecraft:block/redstone_torch")
+  private lazy val rsOff = Texture.block("minecraft:block/redstone_torch_off")
+
+  @OnlyIn(Dist.CLIENT)
+  override def drawResult(graphics: GuiGraphics, result: Boolean, rect: Rect, target: DrawTarget): Unit = {
+    if (result)
+      target.drawTexture(graphics, rect, rsOn)
+    else
+      target.drawTexture(graphics, rect, rsOff)
+  }
+
+  @OnlyIn(Dist.CLIENT)
+  override def getResultText(result: Boolean): Component =
+    if (result)
+      Text.translate(localizationPrefix + ".on")
+    else
+      Text.translate(localizationPrefix + ".off")
+}

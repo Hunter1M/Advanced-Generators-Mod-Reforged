@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "immersivepetroleum"
+    }
+  ],
+  "fuel": [
+    { "fluid": "immersivepetroleum:naphtha" },
+    { "fluid": "immersivepetroleum:naphtha_flowing" }
+  ],
+  "fePerMb": 1200
+}

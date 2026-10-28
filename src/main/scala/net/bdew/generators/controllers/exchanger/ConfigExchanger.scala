@@ -2,9 +2,9 @@ package net.bdew.generators.controllers.exchanger
 
 import net.bdew.generators.registries.Modules
 import net.bdew.lib.multiblock.{ModuleType, MultiblockMachineConfig}
-import net.minecraftforge.common.ForgeConfigSpec
+import net.neoforged.neoforge.common.ModConfigSpec
 
-class ConfigExchanger(spec: ForgeConfigSpec.Builder) extends MultiblockMachineConfig(spec, Modules) {
+class ConfigExchanger(spec: ModConfigSpec.Builder) extends MultiblockMachineConfig(spec, Modules) {
   override def defaultRequired: Map[ModuleType, Int] = Map(
     Modules.heatExchanger -> 1,
   )

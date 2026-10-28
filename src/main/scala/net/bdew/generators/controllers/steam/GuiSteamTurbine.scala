@@ -12,7 +12,7 @@ import net.bdew.lib.power.WidgetPowerGauge
 import net.bdew.lib.{Client, Text}
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
 
 class GuiSteamTurbine(container: ContainerSteamTurbine, playerInv: Inventory) extends BaseScreen(container, playerInv, container.te.getDisplayName) {
   val te: TileSteamTurbineController = container.te

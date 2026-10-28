@@ -1,13 +1,9 @@
 package net.bdew.generators.sensor
 
-import net.bdew.generators.Generators
 import net.bdew.lib.gui.Texture
 import net.bdew.lib.render.IconPreloader
-import net.minecraftforge.api.distmarker.{Dist, OnlyIn}
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus
+import net.neoforged.api.distmarker.{Dist, OnlyIn}
 
-@Mod.EventBusSubscriber(value = Array(Dist.CLIENT), modid = Generators.ModId, bus = Bus.MOD)
 object Icons extends IconPreloader {
 
   trait Loader {

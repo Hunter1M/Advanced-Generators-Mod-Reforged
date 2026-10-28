@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "advgenerators:block/fuel_turbine_controller"
+    }
+  }
+}

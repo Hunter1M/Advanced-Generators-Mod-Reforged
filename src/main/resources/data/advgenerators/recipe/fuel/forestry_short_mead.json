@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "forestry"
+    }
+  ],
+  "fuel": [
+    { "fluid": "forestry:short_mead" },
+    { "fluid": "forestry:short_mead_flowing" }
+  ],
+  "fePerMb": 512
+}

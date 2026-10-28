@@ -1,22 +1,9 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-
 plugins {
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.modrinth.minotaur" version "2.+"
+    id 'java'
+    id 'scala'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.148'
 }
-
-apply plugin: 'scala'
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
 file "build.properties" withReader {
     def prop = new Properties()
@@ -33,48 +20,45 @@ if (project.hasProperty('buildnum')) {
 version = simpleVersion + '-mc' + config.minecraft.version
 
 group = 'net.bdew'
-archivesBaseName = config.mod.id
+base {
+    archivesName = config.mod.id
+}
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
 
-minecraft {
-    mappings channel: 'official', version: config.minecraft.version
+neoForge {
+    version = config.neoforge.version
+
     runs {
         client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                register(config.mod.id) {
-                    source sourceSets.main
-                }
-            }
+            client()
+            gameDirectory = project.file('run')
+            systemProperty 'neoforge.logging.markers', 'REGISTRIES'
+            systemProperty 'neoforge.logging.console.level', 'debug'
         }
 
         server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                register(config.mod.id) {
-                    source sourceSets.main
-                }
-            }
+            server()
+            gameDirectory = project.file('run')
+            systemProperty 'neoforge.logging.markers', 'REGISTRIES'
+            systemProperty 'neoforge.logging.console.level', 'debug'
         }
 
         data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', config.mod.id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            forceExit false
-            mods {
-                register(config.mod.id) {
-                    source sourceSets.main
-                }
-            }
+            data()
+            gameDirectory = project.file('run')
+            systemProperty 'neoforge.logging.markers', 'REGISTRIES'
+            systemProperty 'neoforge.logging.console.level', 'debug'
+            programArguments.addAll '--mod', config.mod.id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+    }
+
+    mods {
+        advgenerators {
+            sourceSet sourceSets.main
         }
     }
 }
@@ -82,57 +66,72 @@ minecraft {
 sourceSets.main.resources {
     srcDir 'src/generated/resources'
     exclude '**/*.psd'
+    exclude '**/.cache/**'
 }
 
 repositories {
+    mavenCentral()
+
     maven {
-        name = "bdew"
-        url = "https://jenkins.bdew.net/maven"
-    }
-    maven {
-        name = "Azure-SLP"
-        url = uri("https://pkgs.dev.azure.com/Kotori316/minecraft/_packaging/mods/maven/v1")
+        name = "CurseMaven"
+        url = "https://cursemaven.com"
         content {
-            includeModule("com.kotori316", "ScalableCatsForce".toLowerCase())
-            includeModule("org.typelevel", "cats-core_2.13")
-            includeModule("org.typelevel", "cats-kernel_2.13")
+            includeGroup "curse.maven"
         }
     }
+
     maven {
-        name = "ModMaven"
-        url = "https://modmaven.dev"
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
     }
+
     maven {
-        url "https://cursemaven.com"
-    }
-    repositories.stream().filter { it instanceof MavenArtifactRepository }.forEach { repo ->
-        repo.content {
-            excludeVersionByRegex(".*", ".*", ".*_mapped_snapshot_.*")
+        name = "CreateMod"
+        url = "https://maven.createmod.net/"
+        content {
+            includeGroup "net.createmod.ponder"
+            includeGroup "dev.engine-room.flywheel"
+            includeGroup "com.tterrag.registrate"
         }
     }
 }
 
 dependencies {
-    minecraft(group: 'net.minecraftforge', name: 'forge', version: "${config.minecraft.version}-${config.forge.version}")
-
-    compileOnly(group: 'org.scala-lang', name: 'scala-library', version: config.scala.version)
-
-    runtimeOnly(group: "com.kotori316", name: "ScalableCatsForce".toLowerCase(), version: config.slp.version, classifier: "with-library") {
-        transitive(false)
+    // Scala runtime. It is embedded into the mod jar with Jar-in-Jar and also put on the
+    // classpath of the development runs (external jars are not loaded as mods before 1.21.9).
+    jarJar(implementation("org.scala-lang:scala-library:${config.scala.version}")) {
+        version {
+            strictly '[2.13,2.14)'
+            prefer config.scala.version
+        }
     }
+    additionalRuntimeClasspath "org.scala-lang:scala-library:${config.scala.version}"
 
-    if (findProject(":bdlib") != null) {
-        implementation project(":bdlib")
-    } else {
-        implementation fg.deobf("net.bdew:bdlib:${config.bdlib.version}-mc${config.minecraft.version}")
-    }
+    // IC2: Nostalgia API (optional at runtime)
+    compileOnly "curse.maven:industrial-craft-2-nostalgia-1725644:9316825"
 
-    compileOnly fg.deobf("mezz.jei:jei-${config.minecraft.version}-common-api:${config.jei.version}")
-    compileOnly fg.deobf("mezz.jei:jei-${config.minecraft.version}-forge-api:${config.jei.version}")
+    // Optional energy integration APIs
+    compileOnly "maven.modrinth:mekanism:10.7.19.85"
+    compileOnly "maven.modrinth:buildcraft-community-edition:8.0.25+1.21.1+neoforge"
+    compileOnly "maven.modrinth:create:6.0.10+mc1.21.1"
+    compileOnly "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"
+    compileOnly "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:1.0.6"
+    compileOnly "maven.modrinth:electrodynamics:1.21.1-1.1.1"
+    compileOnly "maven.modrinth:voltaic:1.21.1-1.2.2"
+}
 
-    compileOnly fg.deobf("curse.maven:ic2_classic-242942:${config.ic2c.fileId}")
-
-    compileOnly "mekanism:Mekanism:${config.mekanism.version}:api"
+tasks.withType(ScalaCompile).configureEach {
+    options.release = 21
+    scalaCompileOptions.additionalParameters = [
+            '-deprecation',
+            '-feature',
+            '-language:implicitConversions',
+            '-language:existentials',
+            '-language:higherKinds'
+    ]
 }
 
 jar {
@@ -149,56 +148,10 @@ jar {
     }
 }
 
-jar.finalizedBy('reobfJar')
-
 publishing {
     publications {
         maven(MavenPublication) {
             artifact jar
         }
-    }
-    repositories {
-        maven {
-            url "file://var/www/maven"
-        }
-    }
-}
-
-curseforge {
-    apiKey = project.hasProperty("curseForgeApiKey") ? project.curseForgeApiKey : ""
-    project {
-        id = config.curseforge.id
-
-        releaseType = "alpha"
-        changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
-
-        addGameVersion config.minecraft.version
-
-        mainArtifact(jar) {
-            displayName = "Advanced Generators ${simpleVersion} (MC ${config.minecraft.version})"
-        }
-
-        relations {
-            requiredDependency 'scalable-cats-force'
-            requiredDependency 'bdlib'
-            optionalDependency 'jei'
-            optionalDependency 'mekanism'
-            optionalDependency 'thermal-expansion'
-        }
-    }
-}
-
-modrinth {
-    token = project.hasProperty("modrinthApiKey") ? project.modrinthApiKey : ""
-    projectId = config.modrinth.id
-    versionName = "${simpleVersion} (MC ${config.minecraft.version})"
-    versionNumber = simpleVersion
-    versionType = "alpha"
-    uploadFile = jar
-    gameVersions = [config.minecraft.version]
-    changelog = project.hasProperty("changelog") ? project.changelog : "No changelog available"
-    dependencies {
-        required.project "scalable-cats-force"
-        required.project "bdlib"
     }
 }

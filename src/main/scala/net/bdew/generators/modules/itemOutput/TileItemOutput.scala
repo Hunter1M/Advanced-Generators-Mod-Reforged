@@ -3,7 +3,7 @@ package net.bdew.generators.modules.itemOutput
 import net.bdew.generators.registries.Modules
 import net.bdew.lib.capabilities.helpers.ItemHelper
 import net.bdew.lib.capabilities.helpers.items.ItemHandlerOptional
-import net.bdew.lib.capabilities.{Capabilities, SidedCapHandler}
+import net.bdew.lib.capabilities.SidedCapHandler
 import net.bdew.lib.multiblock.ModuleType
 import net.bdew.lib.multiblock.data.OutputConfigItems
 import net.bdew.lib.multiblock.interact.CIItemOutput
@@ -12,9 +12,8 @@ import net.bdew.lib.multiblock.tile.{RSControllableOutput, TileOutput}
 import net.minecraft.core.{BlockPos, Direction}
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.common.util.LazyOptional
-import net.minecraftforge.items.IItemHandler
+import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.items.IItemHandler
 
 class TileItemOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockState) extends TileOutput[OutputConfigItems](teType, pos, state) with RSControllableOutput with TileForcedOutput {
   val kind: ModuleType = Modules.itemOutput
@@ -34,28 +33,10 @@ class TileItemOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockStat
   val itemHandlers = new SidedCapHandler[IItemHandler](side =>
     new ItemHandlerOptional(() => outputSourceForSide(side)), allowNull = false)
 
-  //noinspection ComparingUnrelatedTypes
-  override def getCapability[T](cap: Capability[T], side: Direction): LazyOptional[T] = {
-    if (cap == Capabilities.CAP_ITEM_HANDLER)
-      itemHandlers.get(side).cast()
-    else
-      super.getCapability(cap, side)
-  }
-
-  override def invalidateCaps(): Unit = {
-    super.invalidateCaps()
-    itemHandlers.invalidate()
-  }
-
+  override def itemHandler(side: Direction): IItemHandler = itemHandlers.get(side)
 
   def getTargetItemHandler(d: Direction): Option[IItemHandler] = {
-    val tile = getLevel.getBlockEntity(getBlockPos.offset(d.getNormal))
-    if (tile == null) return None
-    val cap = tile.getCapability(Capabilities.CAP_ITEM_HANDLER, d.getOpposite)
-    if (cap.isPresent)
-      Option(cap.orElseGet(() => null))
-    else
-      None
+    Option(getLevel.getCapability(Capabilities.ItemHandler.BLOCK, getBlockPos.offset(d.getNormal), d.getOpposite))
   }
 
   override def canConnectToFace(d: Direction): Boolean =

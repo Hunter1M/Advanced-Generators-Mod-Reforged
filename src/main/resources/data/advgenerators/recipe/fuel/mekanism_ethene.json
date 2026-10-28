@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "fuel": [
+    { "fluid": "mekanism:ethene" },
+    { "fluid": "mekanism:flowing_ethene" }
+  ],
+  "fePerMb": 11260
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "advgenerators:block/power_capacitor_tier2"
+    }
+  }
+}

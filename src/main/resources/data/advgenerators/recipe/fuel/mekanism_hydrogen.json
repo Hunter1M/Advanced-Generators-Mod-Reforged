@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "fuel": [
+    { "fluid": "mekanism:hydrogen" },
+    { "fluid": "mekanism:flowing_hydrogen" }
+  ],
+  "fePerMb": 80
+}

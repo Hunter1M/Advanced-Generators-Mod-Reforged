@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.{Inventory, Player}
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.{BlockEntity, BlockEntityType}
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.fluids.capability.IFluidHandler
-import net.minecraftforge.items.IItemHandler
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
+import net.neoforged.neoforge.items.IItemHandler
 
 class TileExchangerController(teType: BlockEntityType[_], pos: BlockPos, state: BlockState) extends TileExtended(teType, pos, state)
   with TileControllerGui with CIFluidInput with CIOutputFaces with CIFluidOutputSelect with CIItemOutput with CIItemInput with CIRedstoneSensors with CIControl {

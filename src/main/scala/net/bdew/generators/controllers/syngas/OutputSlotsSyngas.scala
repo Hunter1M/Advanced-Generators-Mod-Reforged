@@ -2,7 +2,7 @@ package net.bdew.generators.controllers.syngas
 
 import net.bdew.lib.gui.Texture
 import net.bdew.lib.multiblock.data.SlotSet
-import net.minecraftforge.api.distmarker.{Dist, OnlyIn}
+import net.neoforged.api.distmarker.{Dist, OnlyIn}
 
 object OutputSlotsSyngas extends SlotSet("fluidslots_syngas") {
   val SYNGAS: OutputSlotsSyngas.Slot = Slot("SYNGAS", "advgenerators.syngas.output.syngas")

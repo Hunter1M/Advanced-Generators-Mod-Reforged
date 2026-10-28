@@ -5,17 +5,18 @@ import net.bdew.generators.registries.Modules
 import net.bdew.lib.capabilities.helpers.FluidHelper
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.{InteractionHand, InteractionResult}
+import net.minecraft.world.{InteractionHand, ItemInteractionResult}
 
 class BlockFluidInput extends BaseModule[TileFluidInput](Modules.fluidInput) {
-  override def use(state: BlockState, world: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): InteractionResult = {
+  override def useItemOn(stack: ItemStack, state: BlockState, world: Level, pos: BlockPos, player: Player, hand: InteractionHand, hit: BlockHitResult): ItemInteractionResult = {
     if (!world.isClientSide) {
       if (FluidHelper.blockFluidInteract(world, pos, player, hand))
-        return InteractionResult.CONSUME
+        return ItemInteractionResult.CONSUME
     }
-    super.use(state, world, pos, player, hand, hit)
+    super.useItemOn(stack, state, world, pos, player, hand, hit)
   }
 }

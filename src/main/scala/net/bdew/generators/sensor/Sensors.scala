@@ -10,7 +10,7 @@ import net.bdew.lib.DecFormat
 import net.bdew.lib.gui.Texture
 import net.bdew.lib.sensors.RedstoneSensors
 import net.minecraft.world.level.block.entity.BlockEntity
-import net.minecraftforge.api.distmarker.{Dist, OnlyIn}
+import net.neoforged.api.distmarker.{Dist, OnlyIn}
 
 object Sensors extends RedstoneSensors[BlockEntity] {
   @OnlyIn(Dist.CLIENT)

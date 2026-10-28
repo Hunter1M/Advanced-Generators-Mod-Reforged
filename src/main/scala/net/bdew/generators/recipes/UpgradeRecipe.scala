@@ -5,32 +5,32 @@ import net.bdew.generators.registries.Recipes
 import net.bdew.lib.multiblock.block.BlockModule
 import net.bdew.lib.multiblock.tile.TileModule
 import net.bdew.lib.recipes.{BaseMachineRecipe, BaseMachineRecipeSerializer}
-import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.{FriendlyByteBuf, RegistryFriendlyByteBuf}
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.{RecipeSerializer, RecipeType}
 import net.minecraft.world.level.block.Block
-import net.minecraftforge.registries.ForgeRegistries
+import net.minecraft.core.registries.BuiltInRegistries
 
 class UpgradeRecipeSerializer extends BaseMachineRecipeSerializer[UpgradeRecipe] {
   override def fromJson(recipeId: ResourceLocation, obj: JsonObject): UpgradeRecipe = {
-    val item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(obj.get("item").getAsString))
-    val from = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(obj.get("from").getAsString)).asInstanceOf[BlockModule[_ <: TileModule]]
-    val to = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(obj.get("to").getAsString)).asInstanceOf[BlockModule[_ <: TileModule]]
+    val item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(obj.get("item").getAsString))
+    val from = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(obj.get("from").getAsString)).asInstanceOf[BlockModule[_ <: TileModule]]
+    val to = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(obj.get("to").getAsString)).asInstanceOf[BlockModule[_ <: TileModule]]
     new UpgradeRecipe(recipeId, item, from, to)
   }
 
   override def fromNetwork(recipeId: ResourceLocation, buff: FriendlyByteBuf): UpgradeRecipe = {
-    val item = buff.readRegistryId[Item]()
-    val from = buff.readRegistryId[Block]().asInstanceOf[BlockModule[_ <: TileModule]]
-    val to = buff.readRegistryId[Block]().asInstanceOf[BlockModule[_ <: TileModule]]
+    val item = BuiltInRegistries.ITEM.get(buff.readResourceLocation())
+    val from = BuiltInRegistries.BLOCK.get(buff.readResourceLocation()).asInstanceOf[BlockModule[_ <: TileModule]]
+    val to = BuiltInRegistries.BLOCK.get(buff.readResourceLocation()).asInstanceOf[BlockModule[_ <: TileModule]]
     new UpgradeRecipe(recipeId, item, from, to)
   }
 
   override def toNetwork(buffer: FriendlyByteBuf, recipe: UpgradeRecipe): Unit = {
-    buffer.writeRegistryId(ForgeRegistries.ITEMS, recipe.item)
-    buffer.writeRegistryId(ForgeRegistries.BLOCKS, recipe.from)
-    buffer.writeRegistryId(ForgeRegistries.BLOCKS, recipe.to)
+    buffer.writeResourceLocation(BuiltInRegistries.ITEM.getKey(recipe.item))
+    buffer.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(recipe.from))
+    buffer.writeResourceLocation(BuiltInRegistries.BLOCK.getKey(recipe.to))
   }
 }
 

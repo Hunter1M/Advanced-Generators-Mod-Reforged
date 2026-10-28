@@ -2,9 +2,9 @@ package net.bdew.generators.controllers.turbine
 
 import net.bdew.generators.registries.Modules
 import net.bdew.lib.multiblock.{ModuleType, MultiblockMachineConfig}
-import net.minecraftforge.common.ForgeConfigSpec
+import net.neoforged.neoforge.common.ModConfigSpec
 
-class ConfigFuelTurbine(spec: ForgeConfigSpec.Builder) extends MultiblockMachineConfig(spec, Modules) {
+class ConfigFuelTurbine(spec: ModConfigSpec.Builder) extends MultiblockMachineConfig(spec, Modules) {
   override def defaultRequired: Map[ModuleType, Int] = Map(
     Modules.turbine -> 1,
   )

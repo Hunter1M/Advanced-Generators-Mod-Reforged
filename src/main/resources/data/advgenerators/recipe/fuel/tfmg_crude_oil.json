@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tfmg"
+    }
+  ],
+  "fuel": [
+    { "fluid": "tfmg:crude_oil" },
+    { "fluid": "tfmg:flowing_crude_oil" }
+  ],
+  "fePerMb": 500
+}

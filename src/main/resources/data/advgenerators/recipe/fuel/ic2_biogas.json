@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ic2"
+    }
+  ],
+  "fuel": [
+    { "fluid": "ic2:biogas" },
+    { "fluid": "ic2:flowing_biogas" }
+  ],
+  "fePerMb": 500
+}

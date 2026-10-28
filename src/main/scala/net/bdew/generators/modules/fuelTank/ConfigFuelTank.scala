@@ -1,8 +1,8 @@
 package net.bdew.generators.modules.fuelTank
 
 import net.bdew.lib.config.ConfigSection
-import net.minecraftforge.common.ForgeConfigSpec
+import net.neoforged.neoforge.common.ModConfigSpec
 
-class ConfigFuelTank(spec: ForgeConfigSpec.Builder, defaultCapacity: Int) extends ConfigSection {
+class ConfigFuelTank(spec: ModConfigSpec.Builder, defaultCapacity: Int) extends ConfigSection {
   val capacity: () => Int = intVal(spec, "Capacity", "Capacity (mB)", defaultCapacity)
 }

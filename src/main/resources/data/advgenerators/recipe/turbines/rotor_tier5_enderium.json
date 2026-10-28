@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern": [
+    "XXX",
+    "XRX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "tag": "c:ingots/enderium"
+    },
+    "R": {
+      "item": "advgenerators:turbine_rotor_tier4"
+    }
+  },
+  "result": {
+    "id": "advgenerators:turbine_rotor_tier5",
+    "count": 1
+  }
+}

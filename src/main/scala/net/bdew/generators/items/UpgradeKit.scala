@@ -11,7 +11,7 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.item.{Item, ItemStack}
 import net.minecraft.world.level.Level
-import net.minecraftforge.registries.ForgeRegistries
+import net.minecraft.core.registries.BuiltInRegistries
 import org.apache.logging.log4j.{LogManager, Logger}
 
 class UpgradeKit extends Item(Items.upgradeKitProps) {
@@ -40,7 +40,7 @@ class UpgradeKit extends Item(Items.upgradeKitProps) {
     if (ctx.getPlayer.isCrouching) return InteractionResult.PASS
 
     val recipe = Recipes.upgrade.from(world.getRecipeManager).find(_.item == this).getOrElse({
-      log.warn(s"No upgrade recipe found for ${ForgeRegistries.ITEMS.getKey(this)}")
+      log.warn(s"No upgrade recipe found for ${BuiltInRegistries.ITEM.getKey(this)}")
       return InteractionResult.FAIL
     })
 

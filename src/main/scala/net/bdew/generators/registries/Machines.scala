@@ -6,6 +6,8 @@ import net.bdew.generators.controllers.exchanger.{BlockExchangerController, Conf
 import net.bdew.generators.controllers.steam.{BlockSteamTurbineController, ConfigSteamTurbine, TileSteamTurbineController}
 import net.bdew.generators.controllers.syngas.{BlockSyngasController, ConfigSyngas, OutputSlotsSyngas, TileSyngasController}
 import net.bdew.generators.controllers.turbine.{BlockFuelTurbineController, ConfigFuelTurbine, TileFuelTurbineController}
+import net.bdew.generators.integration.buildcraft.BuildCraftIntegration
+import net.bdew.generators.integration.electrodynamics.ElectrodynamicsIntegration
 import net.bdew.generators.integration.ic2c.IC2CIntegration
 import net.bdew.generators.integration.mekanism.MekanismIntegration
 import net.bdew.generators.modules.control.{BlockControl, TileControl}
@@ -141,12 +143,20 @@ object Machines extends MultiblockMachineManager(Blocks) {
   val moduleSensor: Machines.ModuleDef[BlockSensor, TileSensor, ModuleBlockItem] =
     registerModule("sensor", () => new BlockSensor, new TileSensor(_, _, _))
 
+  if (IC2CIntegration.isAvailable) {
+    IC2CIntegration.registerMachines()
+  }
+
   if (MekanismIntegration.isAvailable) {
     MekanismIntegration.registerMachines()
   }
 
-  if (IC2CIntegration.isAvailable) {
-    IC2CIntegration.registerMachines()
+  if (BuildCraftIntegration.isAvailable) {
+    BuildCraftIntegration.registerMachines()
+  }
+
+  if (ElectrodynamicsIntegration.isAvailable) {
+    ElectrodynamicsIntegration.registerMachines()
   }
 
   OutputConfigManager.register(OutputSlotsSyngas.outputConfigId, () => new OutputConfigFluidSlots(OutputSlotsSyngas))

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "advgenerators:block/efficiency_upgrade_tier2"
+    }
+  }
+}

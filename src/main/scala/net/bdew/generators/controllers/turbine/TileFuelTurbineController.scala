@@ -26,10 +26,10 @@ import net.minecraft.world.entity.player.{Inventory, Player}
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.{BlockEntity, BlockEntityType}
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.energy.IEnergyStorage
-import net.minecraftforge.fluids.FluidStack
-import net.minecraftforge.fluids.capability.IFluidHandler
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction
+import net.neoforged.neoforge.energy.IEnergyStorage
+import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.capability.IFluidHandler
+import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
 
 class TileFuelTurbineController(teType: BlockEntityType[_], pos: BlockPos, state: BlockState) extends TileExtended(teType, pos, state)
   with TileControllerGui with CIFluidInput with CIOutputFaces with CIPowerOutput with CIRedstoneSensors with CIControl with CIPowerAccess {
@@ -60,7 +60,8 @@ class TileFuelTurbineController(teType: BlockEntityType[_], pos: BlockPos, state
   lazy val maxOutputs = 6
 
   def doUpdate(): Unit = {
-    val fuelPerFE = if (fuel.getFluidAmount > 0) 1 / TurbineFuelRegistry.getFuelValue(fuel.getFluid.getFluid) / fuelEfficiency else 0
+    val fuelValue = if (fuel.getFluidAmount > 0) TurbineFuelRegistry.getFuelValue(fuel.getFluid.getFluid) else 0
+    val fuelPerFE = if (fuelValue > 0 && fuelEfficiency.value > 0) 1 / fuelValue / fuelEfficiency.value else 0
     fuelPerTick := fuelPerFE * maxFEPerTick
 
     if (getControlStateWithDefault(ControlActions.useFuel, true)) {

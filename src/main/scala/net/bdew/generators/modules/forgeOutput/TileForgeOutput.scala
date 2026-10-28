@@ -3,7 +3,7 @@ package net.bdew.generators.modules.forgeOutput
 import net.bdew.generators.registries.Modules
 import net.bdew.lib.capabilities.helpers.EnergyHelper
 import net.bdew.lib.capabilities.helpers.energy.{EnergyDrainMonitor, EnergyHandlerOptional}
-import net.bdew.lib.capabilities.{Capabilities, SidedCapHandler}
+import net.bdew.lib.capabilities.SidedCapHandler
 import net.bdew.lib.multiblock.ModuleType
 import net.bdew.lib.multiblock.data.OutputConfigPower
 import net.bdew.lib.multiblock.interact.CIPowerOutput
@@ -12,9 +12,8 @@ import net.bdew.lib.multiblock.tile.{RSControllableOutput, TileOutput, TileOutpu
 import net.minecraft.core.{BlockPos, Direction}
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.common.util.LazyOptional
-import net.minecraftforge.energy.IEnergyStorage
+import net.neoforged.neoforge.capabilities.Capabilities
+import net.neoforged.neoforge.energy.IEnergyStorage
 
 class TileForgeOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockState) extends TileOutput[OutputConfigPower](teType, pos, state) with RSControllableOutput with TileForcedOutput {
   val kind: ModuleType = Modules.powerOutput
@@ -31,27 +30,10 @@ class TileForgeOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockSta
     x => outputTracker.track(side, x.toFloat)
   ), allowNull = false)
 
-  //noinspection ComparingUnrelatedTypes
-  override def getCapability[T](cap: Capability[T], side: Direction): LazyOptional[T] = {
-    if (cap == Capabilities.CAP_ENERGY_HANDLER)
-      powerHandlers.get(side).cast()
-    else
-      super.getCapability(cap, side)
-  }
-
-  override def invalidateCaps(): Unit = {
-    super.invalidateCaps()
-    powerHandlers.invalidate()
-  }
+  override def energyHandler(side: Direction): IEnergyStorage = powerHandlers.get(side)
 
   def getTargetPowerHandler(d: Direction): Option[IEnergyStorage] = {
-    val tile = getLevel.getBlockEntity(getBlockPos.offset(d.getNormal))
-    if (tile == null) return None
-    val cap = tile.getCapability(Capabilities.CAP_ENERGY_HANDLER, d.getOpposite)
-    if (cap.isPresent)
-      Option(cap.orElseGet(() => null))
-    else
-      None
+    Option(getLevel.getCapability(Capabilities.EnergyStorage.BLOCK, getBlockPos.offset(d.getNormal), d.getOpposite))
   }
 
   override def canConnectToFace(d: Direction): Boolean =

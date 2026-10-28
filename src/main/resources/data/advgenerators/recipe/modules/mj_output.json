@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buildcraftenergy"
+    }
+  ],
+  "pattern": [
+    "FMF",
+    "CPC",
+    "FWF"
+  ],
+  "key": {
+    "C": {
+      "item": "buildcraftenergy:engine_iron"
+    },
+    "M": {
+      "item": "advgenerators:power_io"
+    },
+    "F": {
+      "item": "advgenerators:iron_frame"
+    },
+    "W": {
+      "item": "advgenerators:iron_wiring"
+    },
+    "P": {
+      "item": "advgenerators:iron_tubing"
+    }
+  },
+  "result": {
+    "id": "advgenerators:mj_output"
+  }
+}

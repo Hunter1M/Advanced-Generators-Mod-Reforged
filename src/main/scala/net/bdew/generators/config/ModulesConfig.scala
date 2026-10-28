@@ -5,9 +5,9 @@ import net.bdew.generators.modules.fuelTank.ConfigFuelTank
 import net.bdew.generators.modules.powerCapacitor.ConfigCapacitor
 import net.bdew.generators.modules.turbine.ConfigTurbine
 import net.bdew.lib.config.ConfigSection
-import net.minecraftforge.common.ForgeConfigSpec
+import net.neoforged.neoforge.common.ModConfigSpec
 
-class ModulesConfig(spec: ForgeConfigSpec.Builder) {
+class ModulesConfig(spec: ModConfigSpec.Builder) {
   val fuelTank: ConfigFuelTank = ConfigSection(spec, "FuelTank", new ConfigFuelTank(spec, 16000))
 
   val heatExchanger: ConfigExchanger = ConfigSection(spec, "HeatExchanger", new ConfigExchanger(spec, 16))

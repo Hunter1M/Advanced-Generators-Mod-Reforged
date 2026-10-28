@@ -1,0 +1,30 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/bdew-minecraft/generators/issues"
+license = "MIT"
+
+[[mods]]
+modId = "advgenerators"
+version = "${file.jarVersion}"
+displayName = "Advanced Generators"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/advanced-generators"
+authors = "bdew"
+description = '''
+Free Form, Multi Block, Modular Power Generators
+'''
+
+[[dependencies.advgenerators]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.259,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.advgenerators]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+

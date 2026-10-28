@@ -1,0 +1,14 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "immersiveengineering"
+    }
+  ],
+  "fuel": [
+    { "fluid": "immersiveengineering:biodiesel" },
+    { "fluid": "immersiveengineering:biodiesel_flowing" }
+  ],
+  "fePerMb": 1024
+}

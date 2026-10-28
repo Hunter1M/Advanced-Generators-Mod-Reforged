@@ -26,61 +26,56 @@ class TileEuOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockState,
 
   private var addedToNetwork = false
 
-
-  override def setRemoved(): Unit = {
-    if (addedToNetwork) {
-      EnergyNet.INSTANCE.removeTile(this)
-      addedToNetwork = false
-    }
-    super.setRemoved()
-  }
-
-  override def onChunkUnloaded(): Unit = {
-    if (addedToNetwork) {
-      EnergyNet.INSTANCE.removeTile(this)
-      addedToNetwork = false
-    }
-    super.onChunkUnloaded()
-  }
-
-  //  override def clearRemoved(): Unit = {
-  //    super.clearRemoved()
-  //    if (!this.getWorldObject.isClientSide && !addedToNetwork) {
-  //      EnergyNet.INSTANCE.addTile(this)
-  //      addedToNetwork = true
-  //    }
-  //  }
-
-  override def onLoad(): Unit = {
-    super.onLoad()
-    if (!this.getWorldObject.isClientSide && !addedToNetwork) {
-      EnergyNet.INSTANCE.addTile(this)
+  private def addToNetwork(): Unit = {
+    if (!addedToNetwork && getLevel != null && !getLevel.isClientSide) {
+      EnergyNet.instance.addBlockEntityTile(this)
       addedToNetwork = true
     }
   }
 
+  private def removeFromNetwork(): Unit = {
+    if (addedToNetwork) {
+      EnergyNet.instance.removeTile(this)
+      addedToNetwork = false
+    }
+  }
+
+  override def onLoad(): Unit = {
+    super.onLoad()
+    addToNetwork()
+  }
+
+  override def setRemoved(): Unit = {
+    removeFromNetwork()
+    super.setRemoved()
+  }
+
+  override def onChunkUnloaded(): Unit = {
+    removeFromNetwork()
+    super.onChunkUnloaded()
+  }
+
   def ratio: Double = Config.Integration.IC2.ratio()
-  def facing: Direction = getBlockState.getBlock.asInstanceOf[BlockEuOutput].getFacing(getWorldObj.getBlockState(getPosition))
+  def facing: Direction = getBlockState.getBlock.asInstanceOf[BlockEuOutput].getFacing(getLevel.getBlockState(getBlockPos))
 
   override def getSourceTier: Int = tier.number
-  override def getMaxEnergyOutput: Int = tier.maxPower
 
-  override def getProvidedEnergy: Int = {
+  override def getOfferedEnergy: Double = {
     val out = for {
       core <- getCore
       cfg <- getCfg(facing) if checkCanOutput(cfg)
-    } yield (core.power.stored * ratio).floor.toInt
-    Math.min(out.getOrElse(0), tier.maxPower)
+    } yield (core.power.stored * ratio).floor
+    Math.min(out.getOrElse(0D), tier.maxPower)
   }
 
-  override def consumeEnergy(i: Int): Unit = {
-    getCore.foreach(c => c.power.extract((i.toDouble / ratio).toFloat, false))
-    outputTracker.track(facing, i.toFloat)
+  override def drawEnergy(amount: Double): Unit = {
+    if (ratio > 0)
+      getCore.foreach(c => c.power.extract((amount / ratio).toFloat, false))
+    outputTracker.track(facing, amount.toFloat)
   }
 
-  override def canEmitEnergy(iEnergyAcceptor: IEnergyAcceptor, direction: Direction): Boolean = {
+  override def emitsEnergyTo(acceptor: IEnergyAcceptor, direction: Direction): Boolean =
     getCore.isDefined && facing == direction
-  }
 
   override def canConnectToFace(d: Direction): Boolean =
     d == facing
@@ -88,7 +83,8 @@ class TileEuOutput(teType: BlockEntityType[_], pos: BlockPos, state: BlockState,
   def facingChanged(): Unit = {
     doRescanFaces()
     if (addedToNetwork) {
-      EnergyNet.INSTANCE.updateTile(this)
+      EnergyNet.instance.removeTile(this)
+      EnergyNet.instance.addBlockEntityTile(this)
     }
   }
 

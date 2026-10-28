@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.{BlockState, StateDefinition}
 import net.minecraft.world.level.{BlockGetter, Level}
-import net.minecraftforge.network.NetworkHooks
+
 
 class BlockControl extends BaseModule[TileControl](Modules.control) {
   override def getDefaultState(base: BlockState): BlockState =
@@ -26,7 +26,7 @@ class BlockControl extends BaseModule[TileControl](Modules.control) {
   override def activateGui(state: BlockState, world: Level, pos: BlockPos, controller: TileController, player: Player): Boolean = {
     player match {
       case serverPlayer: ServerPlayer =>
-        NetworkHooks.openScreen(serverPlayer, getTE(world, pos), pos)
+        serverPlayer.openMenu(getTE(world, pos), pos)
         true
       case _ => false
     }

@@ -1,24 +1,25 @@
 package net.bdew.generators.datagen
 
 import net.bdew.generators.Generators
+import net.bdew.generators.integration.create.BlockKineticConverter
 import net.bdew.generators.modules.control.BlockControl
 import net.bdew.generators.registries.Blocks
 import net.bdew.lib.datagen.BlockStateGenerator
 import net.bdew.lib.rotate.StatefulBlockFacing
 import net.bdew.lib.sensors.multiblock.BlockRedstoneSensorModule
 import net.minecraft.core.Direction
-import net.minecraft.data.DataGenerator
+import net.minecraft.data.PackOutput
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import net.minecraftforge.client.model.generators.ConfiguredModel
-import net.minecraftforge.common.data.ExistingFileHelper
-import net.minecraftforge.registries.ForgeRegistries
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel
+import net.neoforged.neoforge.common.data.ExistingFileHelper
+import net.minecraft.core.registries.BuiltInRegistries
 
-class BlockStates(gen: DataGenerator, efh: ExistingFileHelper) extends BlockStateGenerator(gen, Generators.ModId, efh) {
+class BlockStates(gen: PackOutput, efh: ExistingFileHelper) extends BlockStateGenerator(gen, Generators.ModId, efh) {
   override def registerStatesAndModels(): Unit = {
     Blocks.all.foreach(_.get() match {
       case block: BlockControl =>
-        val modelOff = uncheckedModel("block/" + ForgeRegistries.BLOCKS.getKey(block).getPath + "_off")
-        val modelOn = uncheckedModel("block/" + ForgeRegistries.BLOCKS.getKey(block).getPath + "_on")
+        val modelOff = uncheckedModel("block/" + BuiltInRegistries.BLOCK.getKey(block).getPath + "_off")
+        val modelOn = uncheckedModel("block/" + BuiltInRegistries.BLOCK.getKey(block).getPath + "_on")
         getVariantBuilder(block)
           .forAllStates(state => {
             val powered = state.getValue(BlockStateProperties.POWERED)
@@ -28,8 +29,8 @@ class BlockStates(gen: DataGenerator, efh: ExistingFileHelper) extends BlockStat
           })
         makeBlockItem(block, modelOff)
       case block: BlockRedstoneSensorModule[_] =>
-        val modelOff = uncheckedModel("block/" + ForgeRegistries.BLOCKS.getKey(block).getPath + "_off")
-        val modelOn = uncheckedModel("block/" + ForgeRegistries.BLOCKS.getKey(block).getPath + "_on")
+        val modelOff = uncheckedModel("block/" + BuiltInRegistries.BLOCK.getKey(block).getPath + "_off")
+        val modelOn = uncheckedModel("block/" + BuiltInRegistries.BLOCK.getKey(block).getPath + "_on")
         getVariantBuilder(block)
           .forAllStates(state => {
             val facing = state.getValue(BlockStateProperties.FACING)
@@ -47,8 +48,24 @@ class BlockStates(gen: DataGenerator, efh: ExistingFileHelper) extends BlockStat
             builder.build()
           })
         makeBlockItem(block, modelOff)
+      case block: BlockKineticConverter =>
+        val model = uncheckedModel("block/kinetic_converter")
+        getVariantBuilder(block)
+          .forAllStates(state => {
+            val axis = state.getValue(BlockStateProperties.AXIS)
+            val builder = ConfiguredModel.builder().modelFile(model)
+            axis match {
+              case Direction.Axis.X =>
+                builder.rotationX(90).rotationY(90)
+              case Direction.Axis.Z =>
+                builder.rotationX(90).rotationY(180)
+              case _ =>
+            }
+            builder.build()
+          })
+        makeBlockItem(block, model)
       case block: StatefulBlockFacing =>
-        val model = uncheckedModel("block/" + ForgeRegistries.BLOCKS.getKey(block).getPath)
+        val model = uncheckedModel("block/" + BuiltInRegistries.BLOCK.getKey(block).getPath)
         getVariantBuilder(block)
           .forAllStates(state => {
             val facing = block.getFacing(state)

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "advgenerators:block/control_off"
+    },
+    "powered=true": {
+      "model": "advgenerators:block/control_on"
+    }
+  }
+}

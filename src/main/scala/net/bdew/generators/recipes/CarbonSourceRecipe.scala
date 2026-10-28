@@ -1,27 +1,28 @@
 package net.bdew.generators.recipes
 
 import com.google.gson.JsonObject
+import com.mojang.serialization.JsonOps
 import net.bdew.generators.registries.Recipes
 import net.bdew.lib.recipes.{BaseMachineRecipe, BaseMachineRecipeSerializer}
-import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.network.{FriendlyByteBuf, RegistryFriendlyByteBuf}
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.crafting.{Ingredient, RecipeSerializer, RecipeType}
 
 class CarbonSourceRecipeSerializer extends BaseMachineRecipeSerializer[CarbonSourceRecipe] {
   override def fromJson(recipeId: ResourceLocation, obj: JsonObject): CarbonSourceRecipe = {
-    val ingr = Ingredient.fromJson(obj.get("items"))
+    val ingr = Ingredient.CODEC.parse(JsonOps.INSTANCE, obj.get("items")).getOrThrow()
     val carbonValue = obj.get("carbonValue").getAsFloat
     new CarbonSourceRecipe(recipeId, ingr, carbonValue)
   }
 
   override def fromNetwork(recipeId: ResourceLocation, buff: FriendlyByteBuf): CarbonSourceRecipe = {
-    val ingr = Ingredient.fromNetwork(buff)
+    val ingr = Ingredient.CONTENTS_STREAM_CODEC.decode(buff.asInstanceOf[RegistryFriendlyByteBuf])
     val carbonValue = buff.readFloat()
     new CarbonSourceRecipe(recipeId, ingr, carbonValue)
   }
 
   override def toNetwork(buffer: FriendlyByteBuf, recipe: CarbonSourceRecipe): Unit = {
-    recipe.ingredient.toNetwork(buffer)
+    Ingredient.CONTENTS_STREAM_CODEC.encode(buffer.asInstanceOf[RegistryFriendlyByteBuf], recipe.ingredient)
     buffer.writeFloat(recipe.carbonValue)
   }
 }

@@ -1,0 +1,13 @@
+﻿{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buildcraftenergy"
+    }
+  ],
+  "fuel": {
+    "fluidTag": "c:searing_fuel_mixed_heavy"
+  },
+  "fePerMb": 8000
+}

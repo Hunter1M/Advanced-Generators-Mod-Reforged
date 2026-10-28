@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ic2"
+    }
+  ],
+  "pattern": [
+    "IDI",
+    "IXI",
+    "IDI"
+  ],
+  "key": {
+    "X": {
+      "item": "advgenerators:upgrade_kit"
+    },
+    "I": {
+      "item": "ic2:carbon_plate"
+    },
+    "D": {
+      "item": "ic2:lapotron_crystal"
+    }
+  },
+  "result": {
+    "id": "advgenerators:capacitor_kit_tier3"
+  }
+}

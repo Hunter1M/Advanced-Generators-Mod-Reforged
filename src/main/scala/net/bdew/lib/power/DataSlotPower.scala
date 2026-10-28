@@ -1,0 +1,63 @@
+package net.bdew.lib.power
+
+import net.bdew.lib.Misc
+import net.bdew.lib.config.PowerConfig
+import net.bdew.lib.data.base.{DataSlot, DataSlotContainer, UpdateKind}
+import net.minecraft.nbt.{CompoundTag, Tag}
+
+case class DataSlotPower(name: String, parent: DataSlotContainer) extends DataSlot {
+  updateKind = Set(UpdateKind.GUI, UpdateKind.SAVE)
+
+  var stored = 0F
+  var capacity = 0F
+  var maxReceive = 0F
+
+  def inject(v: Float, simulate: Boolean): Float = {
+    val canAdd = Misc.clamp(v, 0F, Misc.min(capacity - stored, maxReceive))
+    if ((canAdd > 0) && !simulate) {
+      stored += canAdd
+      parent.dataSlotChanged(this)
+    }
+    canAdd
+  }
+
+  def extract(v: Float, simulate: Boolean): Float = {
+    val canExtract = Misc.clamp(v, 0F, stored)
+    if ((canExtract > 0) && !simulate) {
+      stored -= canExtract
+      if (stored < 1) stored = 0
+      parent.dataSlotChanged(this)
+    }
+    canExtract
+  }
+
+  def configure(cfg: PowerConfig): Unit = {
+    configure(cfg.capacity(), cfg.maxReceive())
+  }
+
+  def configure(capacity: Float, maxReceive: Float): Unit = {
+    this.capacity = capacity
+    this.maxReceive = maxReceive
+    if (this.stored > this.capacity) this.stored = this.capacity
+    parent.dataSlotChanged(this)
+  }
+
+  def save(t: CompoundTag, kind: UpdateKind.Value): Unit = {
+    val tag = new CompoundTag()
+    tag.putFloat("stored", stored)
+    if (kind == UpdateKind.GUI)
+      tag.putFloat("capacity", capacity)
+    t.put(name, tag)
+  }
+
+  def load(t: CompoundTag, kind: UpdateKind.Value): Unit = {
+    if (t.contains(name, Tag.TAG_COMPOUND)) {
+      val tag = t.getCompound(name)
+      stored = tag.getFloat("stored")
+      if (kind == UpdateKind.GUI)
+        capacity = tag.getFloat("capacity")
+    }
+  }
+}
+
+

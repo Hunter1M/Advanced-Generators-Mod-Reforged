@@ -1,0 +1,13 @@
+{
+  "type": "advgenerators:liquid_fuel",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "electrodynamics"
+    }
+  ],
+  "fuel": [
+    { "fluid": "electrodynamics:fluidpolyethylene" }
+  ],
+  "fePerMb": 2000
+}
