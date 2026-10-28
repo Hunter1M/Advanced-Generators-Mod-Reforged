@@ -1,5 +1,5 @@
-[![](http://cf.way2muchnoise.eu/full_advanced-generators_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-generators)
-[![](http://cf.way2muchnoise.eu/versions/advanced-generators.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-generators)
+[![](http://cf.way2muchnoise.eu/full_advanced-generators_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-generators-reforged)
+[![](http://cf.way2muchnoise.eu/versions/advanced-generators.svg)](https://www.curseforge.com/minecraft/mc-mods/advanced-generators-reforged)
 
 # Advanced Generators — NeoForge 1.21.1 port
 
@@ -14,9 +14,7 @@ This branch is a port of Advanced Generators to **Minecraft 1.21.1 / NeoForge 21
 
 ## Notes about this port
 
-- **bdlib is embedded.** There is no bdlib release for 1.21.1 NeoForge, so the
-  bdlib sources have been merged into this mod (`net.bdew.lib`). The separate
-  `bdlib` and `ScalableCatsForce` dependencies are no longer required.
+-`bdlib` and `ScalableCatsForce` dependencies are no longer required.
 - The **Scala 2.13 runtime is bundled with Jar-in-Jar**, so no separate Scala
   loader mod is needed.
 - **Energy outputs:**
